@@ -77,18 +77,17 @@ public class CityController {
     }
 
     @PostMapping("/update/{id}")
-    public String saveCity(@Valid @ModelAttribute("city") City city,
-                              Model model,
-                              BindingResult bindingResult) {
-        if (!bindingResult.hasErrors()) {
+    public String update(@Valid @ModelAttribute City city,
+                            BindingResult bindingResult,
+                            Model model) {
+            if (!bindingResult.hasErrors()) {
             iCityService.save(city);
-            model.addAttribute("message", "Update city successfully!");
-            List<City> cities = (List<City>) iCityService.findAll();
-            model.addAttribute("cities", cities);
-            return "city/list";
+            return "redirect:/cities";
         }
-
-        return "redirect:/cities";
+        Iterable<Country> countries = iCountryService.findAll();
+        model.addAttribute("countries", countries);
+        model.addAttribute("city", city);
+        return "city/edit";
     }
 
     @GetMapping("/search")
